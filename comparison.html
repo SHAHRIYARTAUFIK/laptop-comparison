@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laptop Performance Comparison</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .device-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 3px solid transparent;
+            background-clip: padding-box;
+        }
+        
+        .device-card.current {
+            border-image: linear-gradient(135deg, #667eea, #764ba2) 1;
+        }
+        
+        .device-card.galaxy {
+            border-image: linear-gradient(135deg, #f093fb, #f5576c) 1;
+        }
+        
+        .device-title {
+            font-size: 1.5em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .current .device-title {
+            color: #667eea;
+        }
+        
+        .galaxy .device-title {
+            color: #f5576c;
+        }
+        
+        .spec-list {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+        
+        .spec-list li {
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .spec-label {
+            font-weight: 600;
+            color: #34495e;
+        }
+        
+        .spec-value {
+            color: #7f8c8d;
+        }
+        
+        .performance-section {
+            margin: 40px 0;
+        }
+        
+        .section-title {
+            font-size: 1.8em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .performance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .performance-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .performance-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #34495e;
+        }
+        
+        .score-container {
+            position: relative;
+            margin: 20px 0;
+        }
+        
+        .score-bar {
+            height: 8px;
+            background: #ecf0f1;
+            border-radius: 10px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .score-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 2s ease-in-out;
+            animation: fillAnimation 2s ease-in-out;
+        }
+        
+        @keyframes fillAnimation {
+            from { width: 0%; }
+        }
+        
+        .current-fill {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+        
+        .galaxy-fill {
+            background: linear-gradient(90deg, #f093fb, #f5576c);
+        }
+        
+        .score-text {
+            font-size: 1.4em;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .score-label {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+        }
+        
+        .overall-scores {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .overall-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .overall-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+        }
+        
+        .overall-card.current::before {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+        
+        .overall-card.galaxy::before {
+            background: linear-gradient(90deg, #f093fb, #f5576c);
+        }
+        
+        .overall-score {
+            font-size: 3em;
+            font-weight: 800;
+            margin: 20px 0;
+        }
+        
+        .overall-card.current .overall-score {
+            color: #667eea;
+        }
+        
+        .overall-card.galaxy .overall-score {
+            color: #f5576c;
+        }
+        
+        .verdict {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .verdict h3 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+        
+        .verdict p {
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison-grid,
+            .overall-scores {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Laptop Performance Battle</h1>
+        
+        <div class="comparison-grid">
+            <div class="device-card current">
+                <div class="device-title">🖥️ Your ThinkBook 14s Yoga G2</div>
+                <ul class="spec-list">
+                    <li><span class="spec-label">Processor:</span> <span class="spec-value">Intel Core i7-1255U</span></li>
+                    <li><span class="spec-label">Generation:</span> <span class="spec-value">12th Gen (Alder Lake)</span></li>
+                    <li><span class="spec-label">Base Clock:</span> <span class="spec-value">1.7 GHz</span></li>
+                    <li><span class="spec-label">RAM:</span> <span class="spec-value">16 GB</span></li>
+                    <li><span class="spec-label">Cores/Threads:</span> <span class="spec-value">10C/12T (2P+8E)</span></li>
+                    <li><span class="spec-label">Graphics:</span> <span class="spec-value">Intel Iris Xe</span></li>
+                </ul>
+            </div>
+            
+            <div class="device-card galaxy">
+                <div class="device-title">⭐ Galaxy Book 4 (Ultra 5 125U)</div>
+                <ul class="spec-list">
+                    <li><span class="spec-label">Processor:</span> <span class="spec-value">Intel Core Ultra 5 125U</span></li>
+                    <li><span class="spec-label">Generation:</span> <span class="spec-value">1st Gen Meteor Lake</span></li>
+                    <li><span class="spec-label">Base Clock:</span> <span class="spec-value">1.3 GHz</span></li>
+                    <li><span class="spec-label">RAM:</span> <span class="spec-value">16 GB (typical)</span></li>
+                    <li><span class="spec-label">Cores/Threads:</span> <span class="spec-value">12C/14T (2P+8E+2LPE)</span></li>
+                    <li><span class="spec-label">Graphics:</span> <span class="spec-value">Intel Arc Graphics</span></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="performance-section">
+            <div class="section-title">⚡ Performance Comparison</div>
+            <div class="performance-grid">
+                <div class="performance-card">
+                    <div class="performance-title">CPU Multi-Core Performance</div>
+                    <div class="score-container">
+                        <div class="score-text current-fill" style="color: #667eea;">75/100</div>
+                        <div class="score-label">Your ThinkBook</div>
+                        <div class="score-bar">
+                            <div class="score-fill current-fill" style="width: 75%;"></div>
+                        </div>
+                    </div>
+                    <div class="score-container">
+                        <div class="score-text galaxy-fill" style="color: #f5576c;">82/100</div>
+                        <div class="score-label">Galaxy Book 4</div>
+                        <div class="score-bar">
+                            <div class="score-fill galaxy-fill" style="width: 82%;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="performance-card">
+                    <div class="performance-title">Single-Core Speed</div>
+                    <div class="score-container">
+                        <div class="score-text current-fill" style="color: #667eea;">78/100</div>
+                        <div class="score-label">Your ThinkBook</div>
+                        <div class="score-bar">
+                            <div class="score-fill current-fill" style="width: 78%;"></div>
+                        </div>
+                    </div>
+                    <div class="score-container">
+                        <div class="score-text galaxy-fill" style="color: #f5576c;">74/100</div>
+                        <div class="score-label">Galaxy Book 4</div>
+                        <div class="score-bar">
+                            <div class="score-fill galaxy-fill" style="width: 74%;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="performance-card">
+                    <div class="performance-title">Graphics Performance</div>
+                    <div class="score-container">
+                        <div class="score-text current-fill" style="color: #667eea;">65/100</div>
+                        <div class="score-label">Your ThinkBook</div>
+                        <div class="score-bar">
+                            <div class="score-fill current-fill" style="width: 65%;"></div>
+                        </div>
+                    </div>
+                    <div class="score-container">
+                        <div class="score-text galaxy-fill" style="color: #f5576c;">72/100</div>
+                        <div class="score-label">Galaxy Book 4</div>
+                        <div class="score-bar">
+                            <div class="score-fill galaxy-fill" style="width: 72%;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="performance-card">
+                    <div class="performance-title">Creative Tasks (Video/Photo)</div>
+                    <div class="score-container">
+                        <div class="score-text current-fill" style="color: #667eea;">70/100</div>
+                        <div class="score-label">Your ThinkBook</div>
+                        <div class="score-bar">
+                            <div class="score-fill current-fill" style="width: 70%;"></div>
+                        </div>
+                    </div>
+                    <div class="score-container">
+                        <div class="score-text galaxy-fill" style="color: #f5576c;">76/100</div>
+                        <div class="score-label">Galaxy Book 4</div>
+                        <div class="score-bar">
+                            <div class="score-fill galaxy-fill" style="width: 76%;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="performance-card">
+                    <div class="performance-title">Battery Efficiency</div>
+                    <div class="score-container">
+                        <div class="score-text current-fill" style="color: #667eea;">72/100</div>
+                        <div class="score-label">Your ThinkBook</div>
+                        <div class="score-bar">
+                            <div class="score-fill current-fill" style="width: 72%;"></div>
+                        </div>
+                    </div>
+                    <div class="score-container">
+                        <div class="score-text galaxy-fill" style="color: #f5576c;">85/100</div>
+                        <div class="score-label">Galaxy Book 4</div>
+                        <div class="score-bar">
+                            <div class="score-fill galaxy-fill" style="width: 85%;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="performance-card">
+                    <div class="performance-title">AI/ML Tasks</div>
+                    <div class="score-container">
+                        <div class="score-text current-fill" style="color: #667eea;">45/100</div>
+                        <div class="score-label">Your ThinkBook</div>
+                        <div class="score-bar">
+                            <div class="score-fill current-fill" style="width: 45%;"></div>
+                        </div>
+                    </div>
+                    <div class="score-container">
+                        <div class="score-text galaxy-fill" style="color: #f5576c;">88/100</div>
+                        <div class="score-label">Galaxy Book 4</div>
+                        <div class="score-bar">
+                            <div class="score-fill galaxy-fill" style="width: 88%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="overall-scores">
+            <div class="overall-card current">
+                <div class="device-title">Your ThinkBook 14s Yoga G2</div>
+                <div class="overall-score">71</div>
+                <div style="font-size: 1.2em; color: #7f8c8d;">Overall Performance Score</div>
+                <p style="margin-top: 15px; color: #34495e;">Solid performer with great single-core speed and proven reliability</p>
+            </div>
+            
+            <div class="overall-card galaxy">
+                <div class="device-title">Galaxy Book 4 (Ultra 5 125U)</div>
+                <div class="overall-score">79</div>
+                <div style="font-size: 1.2em; color: #7f8c8d;">Overall Performance Score</div>
+                <p style="margin-top: 15px; color: #34495e;">Modern architecture with superior efficiency and AI capabilities</p>
+            </div>
+        </div>
+        
+        <div class="verdict">
+            <h3>🎯 The Verdict</h3>
+            <p>The Galaxy Book 4 with Intel Core Ultra 5 125U edges out your current ThinkBook with an 8-point advantage (79 vs 71). While your i7-1255U still holds strong in single-core tasks, the newer Ultra 5 125U shines with better multi-core performance, significantly improved graphics, exceptional battery life, and dedicated AI processing capabilities. For creative work and modern productivity tasks, the Galaxy Book 4 offers a noticeable upgrade, especially for video editing, AI-assisted workflows, and all-day battery life.</p>
+        </div>
+    </div>
+</body>
+</html>
